@@ -1,139 +1,70 @@
 
 {
-  "name": "Demo Pipeline Validation Workflow with Conditional Execution - 2025-05-28",
+  "name": "Lab Pipeline Validation Workflow with Conditional Execution - 2025-05-28",
   "email_notifications": {
-    "on_failure": [
-      "labuser10438274_1748407089@vocareum.com"
-    ],
-    "on_success": [
-      "labuser10438274_1748407089@vocareum.com"
-    ]
+    "on_failure": ["labuser10438274_1748407089@vocareum.com"],
+    "on_success": ["labuser10438274_1748407089@vocareum.com"]
   },
   "tasks": [
     {
       "task_key": "data_cleaning",
       "notebook_task": {
-        "notebook_path": "/Users/labuser10438274_1748407089@vocareum.com/advanced-machine-learning-operations-1.2.4/M01 - Streamlining MLOps with Databricks/1.1 Demo - Pipeline workflow notebooks/01_data_transformation/data_cleaning",
+        "notebook_path": "<FILL_IN>",
         "source": "WORKSPACE"
       },
       "existing_cluster_id": "0528-043846-ubsgc2c7",
       "timeout_seconds": 600,
-      "run_if": "ALL_SUCCESS",
-      "email_notifications": {
-        "on_success": [
-          "labuser10438274_1748407089@vocareum.com"
-        ]
-      }
-    },
-    {
-      "task_key": "data_transformation",
-      "depends_on": [{"task_key": "data_cleaning"}],
-      "notebook_task": {
-        "notebook_path": "/Users/labuser10438274_1748407089@vocareum.com/advanced-machine-learning-operations-1.2.4/M01 - Streamlining MLOps with Databricks/1.1 Demo - Pipeline workflow notebooks/01_data_transformation/data_transformation",
-        "source": "WORKSPACE"
-      },
-      "existing_cluster_id": "0528-043846-ubsgc2c7",
-      "timeout_seconds": 600,
-      "run_if": "ALL_SUCCESS",
-      "email_notifications": {
-        "on_success": [
-          "labuser10438274_1748407089@vocareum.com"
-        ]
-      }
+      "run_if": <FILL_IN>
     },
     {
       "task_key": "feature_engineering",
-      "depends_on": [{"task_key": "data_transformation"}],
+      "depends_on": [<FILL_IN>],
       "notebook_task": {
-        "notebook_path": "/Users/labuser10438274_1748407089@vocareum.com/advanced-machine-learning-operations-1.2.4/M01 - Streamlining MLOps with Databricks/1.1 Demo - Pipeline workflow notebooks/02_model_training/feature_engineering_incorrect",
-        "source": "WORKSPACE"
+        "notebook_path": "<FILL_IN>",
+        "source": "WORKSPACE",
+        "base_parameters": {
+          <FILL_IN>
+        }
       },
       "existing_cluster_id": "0528-043846-ubsgc2c7",
       "timeout_seconds": 600,
-      "run_if": "ALL_SUCCESS",
-      "email_notifications": {
-        "on_success": [
-          "labuser10438274_1748407089@vocareum.com"
-        ]
-      }
+      "run_if": "ALL_SUCCESS"
     },
     {
       "task_key": "conditional_execution",
-      "depends_on": [{"task_key": "feature_engineering"}],
+      "depends_on": [<FILL_IN>],
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{tasks.feature_engineering.values.feature_engineering_status}}",
         "right": "SUCCESS"
       },
-      "timeout_seconds": 0,
-      "email_notifications": {}
+      "timeout_seconds": 0
     },
     {
-      "task_key": "train_model",
-      "depends_on": [{"task_key": "conditional_execution", "outcome": "true"}],
-      "notebook_task": {
-        "notebook_path": "/Users/labuser10438274_1748407089@vocareum.com/advanced-machine-learning-operations-1.2.4/M01 - Streamlining MLOps with Databricks/1.1 Demo - Pipeline workflow notebooks/02_model_training/train_model",
-        "source": "WORKSPACE"
-      },
-      "existing_cluster_id": "0528-043846-ubsgc2c7",
-      "timeout_seconds": 600,
-      "run_if": "ALL_SUCCESS",
-      "base_parameters": {
-        "learning_rate": "0.01",
-        "max_depth": "5"
-      },
-      "email_notifications": {
-        "on_success": [
-          "labuser10438274_1748407089@vocareum.com"
-        ]
-      }
-    },
-    {
-      "task_key": "Task_Failed",
+      "task_key": "failure_handling",
       "depends_on": [{"task_key": "conditional_execution", "outcome": "false"}],
       "spark_python_task": {
-        "python_file": "/Users/labuser10438274_1748407089@vocareum.com/advanced-machine-learning-operations-1.2.4/M01 - Streamlining MLOps with Databricks/1.1 Demo - Pipeline workflow notebooks/02_model_training/task_failed.py",
+        "python_file": "<FILL_IN>",
         "parameters": [
           "-e",
           "NonExistentColumn: Column not found in the dataset"
         ]
       },
       "existing_cluster_id": "0528-043846-ubsgc2c7",
-      "timeout_seconds": 0,
-      "run_if": "ALL_SUCCESS",
-      "email_notifications": {}
+      "timeout_seconds": 600
     },
     {
-      "task_key": "evaluate_model",
-      "depends_on": [{"task_key": "train_model"}],
+      "task_key": "model_evaluation",
+      "depends_on": [{"task_key": "conditional_execution", "outcome": "true"}],
       "notebook_task": {
-        "notebook_path": "/Users/labuser10438274_1748407089@vocareum.com/advanced-machine-learning-operations-1.2.4/M01 - Streamlining MLOps with Databricks/1.1 Demo - Pipeline workflow notebooks/03_model_evaluation/evaluate_model",
-        "source": "WORKSPACE"
+        "notebook_path": "<FILL_IN>",
+        "source": "WORKSPACE",
+        "base_parameters": {
+          <FILL_IN>
+        }
       },
       "existing_cluster_id": "0528-043846-ubsgc2c7",
-      "timeout_seconds": 600,
-      "run_if": "ALL_SUCCESS",
-      "email_notifications": {
-        "on_success": [
-          "labuser10438274_1748407089@vocareum.com"
-        ]
-      }
-    },
-    {
-      "task_key": "accuracy_check",
-      "depends_on": [{"task_key": "evaluate_model"}],
-      "notebook_task": {
-        "notebook_path": "/Users/labuser10438274_1748407089@vocareum.com/advanced-machine-learning-operations-1.2.4/M01 - Streamlining MLOps with Databricks/1.1 Demo - Pipeline workflow notebooks/03_model_evaluation/accuracy_check",
-        "source": "WORKSPACE"
-      },
-      "existing_cluster_id": "0528-043846-ubsgc2c7",
-      "timeout_seconds": 600,
-      "run_if": "ALL_SUCCESS",
-      "email_notifications": {
-        "on_success": [
-          "labuser10438274_1748407089@vocareum.com"
-        ]
-      }
+      "timeout_seconds": 600
     }
   ]
 }
